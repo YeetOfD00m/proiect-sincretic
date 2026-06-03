@@ -20,7 +20,6 @@ void setup() {
 
 void loop() { 
 	//while (!Serial.available()); 
-	/**
 	x = Serial.read();
 	if (x == 'A') 
 	{
@@ -30,17 +29,16 @@ void loop() {
 	{
 		digitalWrite(pinLED, LOW);
 	}
-	*/
 	
 	int valADC = analogRead(pinTemp);       // Citim valoarea analogica (0-1023)
   float tensiune = valADC * (5.0 / 1023); // Convertim in Volti (0-5V)
 	temp = tensiune * 100; // 10mV = 1°C => 1V = 100°C
-	//Serial.print("temp: ");
+	if (digitalRead(pinButton) == HIGH) 
+	{
+	Serial.print("inundatie "); 
+	}
+	Serial.print("temp ");
 	Serial.println(temp); 
-	//if (digitalRead(pinButton) == HIGH) 
-	//{
-	//	Serial.println("Alerma inundatie!"); 
-	//}
-	delay(1000);
+	delay(100);
 } 
 
