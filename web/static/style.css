@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+h2 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 18px;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.panel {
+    flex: 1;
+    min-width: 200px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 16px;
+}
+
+.panel p {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+input {
+    width: 90%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+button {
+    padding: 8px 15px;
+    margin: 5px 5px 5px 0;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#messages-list, #flood-events-list {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+    min-height: 50px;
+}
+
+.list-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+p {
+    color: #666;
+    font-size: 14px;
+}

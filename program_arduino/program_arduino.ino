@@ -1,9 +1,20 @@
+#include <EEPROM.h>
+
 char x; 
 
 int pinLED = 26;
 int pinTemp = 33;
 int pinButton = 32;
 float temp;
+int eeprom_pos = 0;
+
+void write_eeprom(int value) 
+{
+	EEPROM.write(eeprom_pos, value); // ar trebui EEPROM.update normal da na csf
+	if (eeprom_pos == 10) { eeprom_pos = 0; }
+	else { eeprom_pos += 1; }
+}
+	
 
 void setup() { 
 	// pins

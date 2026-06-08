@@ -9,10 +9,22 @@ pinTemp = 33
 
 global current_temp
 
+# scriere in serial - 'A' aprinde ledul, 'S' il stinge
 def write_read(x): 
 	arduino.write(bytes(x, 'utf-8'))  
-	#data = arduino.readline() 
-	#return data 
+
+# trimitere alarma inundatie prin email
+def send_alarm():
+	#construire data alarma
+	current_datetime = time.localtime()
+	days = ["Luni","Marti","Miercuri","Joi","Vineri","Sambata","Duminica"]
+	current_date = days[current_datetime.tm_wday] + ", " + str(current_datetime.tm_mday) + "." + str(current_datetime.tm_mon)
+		
+	current_time = str(current_datetime.tm_hour) + ":" + str(current_datetime.tm_min) + ":" + str(current_datetime.tm_sec)
+
+	# trimite email
+	email_alert = send_email.build_email("Alarma inundatie " + current_date + " la ora " + current_time + " !")
+	send_email.send(email_alert, debug=False)
 
 def read_serial():
 	# citire mesaj, decodare si impartire cuv cheie
@@ -21,9 +33,8 @@ def read_serial():
 
 	# rutina alarma inundatie
 	if message[0] == "inundatie":
-		email_alert = send_email.build_email("Alarma inundatie la " + str(time.localtime()) + " !")
-		send_email.send(email_alert, debug=False)
-		time.sleep(2)
+		send_alarm()
+		time.sleep(2) # delay ca sa nu spamam accidental - tre inlocuit cu cv but as of now it works
 		message.remove("inundatie")
 	if message[0] == "temp":
 		current_temp = float(message[1])

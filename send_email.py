@@ -35,6 +35,3 @@ def build_email(content):
     msg["subject"] = "Test Message"
     msg.set_content(content)
     return msg
-
-email_alert = build_email("This is a test message")
-send(email_alert, sender_email, False)

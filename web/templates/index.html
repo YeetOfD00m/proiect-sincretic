@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PSN Proiect Sincretic Anul 3 - Control Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>PSN Proiect Sincretic Anul 3 - Control Panel</h1>
+        
+        <div class="row">
+            <div class="panel">
+                <h2>Temperature</h2>
+                <p>Current: <span id="temperature">--</span> C</p>
+            </div>
+
+            <div class="panel">
+                <h2>LED Control</h2>
+                <p>Status: <span id="led-status">OFF</span></p>
+                <button onclick="turnLedOn()">ON</button>
+                <button onclick="turnLedOff()">OFF</button>
+            </div>
+
+            <div class="panel">
+                <h2>Send Message</h2>
+                <input type="text" id="messageInput" placeholder="Message" maxlength="60">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+
+        <h2>Messages</h2>
+        <button onclick="clearMessages()" style="margin-bottom: 10px;">Clear All</button>
+        <div id="messages-list">
+            <p>No messages</p>
+        </div>
+
+        <h2>Flood Events</h2>
+        <button onclick="clearFloodEvents()" style="margin-bottom: 10px;">Clear All</button>
+        <div id="flood-events-list">
+            <p>No events</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
