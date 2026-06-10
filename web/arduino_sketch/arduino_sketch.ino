@@ -6,10 +6,11 @@
 
 #include <EEPROM.h>  // Standard EEPROM library
 
-// Setari (compatibil cu Arduino Uno/Nano)
-const int pinLED = 13;
-const int pinTemp = A0;
-const int pinFloodSensor = A1;
+// Setari 
+const int pinLED = 26;
+const int pinTemp = 33;
+const int pinFloodSensor = 32;
+static bool floodAlerted = false;
 
 // adrese EEPROM (fiecare mesaj sau eveniment ocupa 64 bytes, max 10 mesaje/evenimente)
 const int MSG_START_ADDR = 0;      // Mesaje: 0-639 (10 messages x 64 bytes)
@@ -26,7 +27,7 @@ byte messageIndex = 0;
 byte floodCount = 0;
 byte floodIndex = 0;
 unsigned long lastTempReadTime = 0;
-unsigned long lastFloodCheckTime = 0;
+unsigned long lastFloodAlertTime = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -35,7 +36,8 @@ void setup() {
   pinMode(pinLED, OUTPUT);
   digitalWrite(pinLED, LOW);
   pinMode(pinFloodSensor, INPUT);
-  
+  pinMode(pinTemp, INPUT);
+
   messageCount = EEPROM.read(MSG_COUNT_ADDR);
   messageIndex = EEPROM.read(MSG_INDEX_ADDR);
   floodCount = EEPROM.read(FLOOD_COUNT_ADDR);
@@ -49,14 +51,13 @@ void setup() {
 }
 
 void loop() {
-  if (millis() - lastTempReadTime > 2000) {
+  if (millis() - lastTempReadTime > 1000) {
     readTemperature();
     lastTempReadTime = millis();
   }
   
-  if (millis() - lastFloodCheckTime > 1000) {
+  if (millis() - lastFloodAlertTime > 1000) {
     checkFloodSensor();
-    lastFloodCheckTime = millis();
   }
   
   // Menegeriază comenzile primite prin serial
@@ -67,11 +68,11 @@ void loop() {
 }
 
 void readTemperature() {
-  int rawValue = analogRead(pinTemp);
-  float voltage = rawValue * (5.0 / 1023.0); // 0-1023 se mappeaza la 0-5V pentru Arduino Uno
-  float temperature = voltage * 100.0; // LM35: 10mV / grad Celsius, deci 1V = 100°C
+  int analog = analogRead(pinTemp);
+  float voltage = 5.0 * analog / 1023.0;
+  float temperature = voltage * 25.0; 
   
-  Serial.print(" | TEMP | ");
+  Serial.print("TEMP:");
   Serial.println(temperature);
 }
 
@@ -216,15 +217,15 @@ void checkFloodSensor() {
   // Citeste starea senzorului de inundatie
   int floodState = digitalRead(pinFloodSensor);
   
-  if (floodState == LOW) { // Inundatie detectata
-    static bool floodAlerted = false;
-    if (!floodAlerted) {
-      Serial.println(" | FLOOD | DETECTED");
+  if (floodState == HIGH) { // Inundatie detectata
+    lastFloodAlertTime = millis();
+    if(!floodAlerted) {
+      Serial.println("FLOOD:DETECTED");
       storeFloodEvent(" | FLOOD | DETECTED");
       floodAlerted = true;
     }
   } else {
-    static bool floodAlerted = false;
+    //Serial.println("FLOOD:FALSE");
     floodAlerted = false;
   }
 }

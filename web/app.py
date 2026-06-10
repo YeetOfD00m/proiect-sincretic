@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 import json
+import send_email
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ if DEBUG_EMAIL:
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USERNAME'] = None
     app.config['MAIL_PASSWORD'] = None
-    app.config['MAIL_DEFAULT_SENDER'] = 'debug@example.com'
+    app.config['MAIL_DEFAULT_SENDER'] = 'psnproiect@gmail.com'
     print(" | INFO_EMAIL | DEBUG MODE - Using MailHog on localhost:1025")
     print(" | INFO_EMAIL | View emails at http://localhost:8025")
 else:
@@ -38,7 +39,7 @@ else:
 mail = Mail(app)
 
 # Conexiune seriala cu Arduino
-arduino = None
+arduino=None
 ARDUINO_PORT = 'COM3'
 ARDUINO_BAUD = 115200
 
@@ -108,23 +109,10 @@ def send_command_to_arduino(cmd):
 
 def send_flood_alert_mail(event):
     try:
-        recipient = os.getenv('FLOOD_ALERT_EMAIL', 'user@example.com')
-        
-        msg = Message(
-            subject='Alertă INUNDAȚIE',
-            recipients=[recipient],
-            body=f"""
-                ALERTĂ INUNDAȚIE!
-                
-                Timp: {event['timestamp']}
-                Mesaj: {event['message']}
-                
-                Vă rugăm să verificați sistemul imediat.
+        recipient = os.getenv('FLOOD_ALERT_EMAIL', 'bogdantatomir21@gmail.com')
+        sender = 'psnproiect@gmail.com'
 
-                """
-        )
-        
-        mail.send(msg)
+        send_email.send(event, debug=False)
         
         if DEBUG_EMAIL:
             print(f" | INFO_EMAIL | [MailHog] Flood alert sent - View at http://localhost:8025")
@@ -244,4 +232,4 @@ if __name__ == '__main__':
     if not connect_arduino():  # Daca conexiunea cu Arduino esueaza, continuam fara ea
         print(" | INFO_WARNING | Continuing without Arduino connection. Some features may not work.")
       
-    app.run(debug=True, host='0.0.0.0', port=5000) # Ruleaza aplicatia Flask
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000) # Ruleaza aplicatia Flask

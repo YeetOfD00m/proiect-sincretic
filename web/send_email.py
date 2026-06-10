@@ -25,13 +25,21 @@ def send(msg, sender_email="psnproiect@gmail.com", debug=True):
             smtp_server, port, context=context
         ) as server:
             server.login(sender_email, password)
-            server.send_message(msg)
+            server.send_message(build_email(msg))
 
 # Build Email Message
-def build_email(content):
+def build_email(event):
     msg = EmailMessage()
     msg["to"] = receiver_email
     msg["from"] = sender_email
-    msg["subject"] = "Test Message"
-    msg.set_content(content)
+    msg["subject"] = "Alerta INUNDATIE!"
+    msg.set_content(f"""
+                ALERTĂ INUNDAȚIE!
+                
+                Timp: {event['timestamp']}
+                Mesaj: {event['message']}
+                
+                Vă rugăm să verificați sistemul imediat.
+
+                """)
     return msg
